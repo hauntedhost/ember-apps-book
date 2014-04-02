@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ember Starter Kit</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+</head>
+<body>
+  <script type="text/x-handlebars">
+    <nav class="navbar navbar-default" role="navigation">
+      <ul class="nav navbar-nav">
+        <li class="navbar-header">
+          {{#link-to 'index' classNames='navbar-brand'}}
+            Emberoverflow
+          {{/link-to}}
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav">
+        {{#if isUserSignedIn}}
+          <li>
+            {{#link-to 'ask-question'}}Ask Question{{/link-to}}
+          </li>
+        {{/if}}
+
+        <li>
+          {{#link-to 'about'}}
+            About site
+          {{/link-to}}
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav">
+        <li>
+          {{#if isUserSignedIn}}
+            <a href="#" {{action "signOut"}}>
+              Welcome, {{signedInUser.fullName}} - Sign out
+            </a>
+          {{else}}
+            {{#link-to 'sign-in'}}Sign in{{/link-to}}
+          {{/if}}
+        </li>
+      </ul>
+    </nav>
+
+    {{outlet}}
+  </script>
+
+  <script type="text/x-handlebars" id="index">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>{{siteTitle}}</h2>
+        <p>It is {{currentTime}}</p>
+
+        <img {{bind-attr src=imageCuteCat}} />
+
+        <ul data-questions>
+          {{#each}}
+            <li>
+              {{#link-to 'question' this}}
+                {{title}}
+              {{/link-to}}
+
+              (asked by {{author.fullName}})
+            </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="about">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>About Emberoverflow</h2>
+
+        <p>
+          Emberflow is a question and answer site.
+        </p>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="question">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>{{title}}</h2>
+
+        <p>
+          {{question}}
+        </p>
+
+        <p>
+          Asked by {{author.fullName}}
+        </p>
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="sign-in">
+    <div class="row">
+      <div class="col-md-8">
+        {{#if controllers.application.isUserSignedIn}}
+          <p>You are already signed in.</p>
+        {{else}}
+          <form {{action "signIn" on="submit"}}>
+            <div class="form-group">
+              <label for="email">Email address</label>
+
+              {{input id="email"
+                value=email
+                classNames="form-control"
+                placeholder="Enter your email address"}}
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+              Sign in
+            </button>
+          </form>
+        {{/if}}
+      </div>
+    </div>
+  </script>
+
+  <script type="text/x-handlebars" id="ask-question">
+    <div class="row">
+      <div class="col-md-8">
+        <h2>Ask New Question</h2>
+
+        <form {{action "askQuestion" on="submit"}}>
+          <div class="form-group">
+            <label for="title">Question title</label>
+            {{input id="title"
+                    value=title
+                    classNames="form-control"
+                    placeholder="Give your question an accurate name"}}
+          </div>
+
+          <div class="form-group">
+            <label for="question">Question</label>
+            {{textarea id="question"
+                       value=question
+                       classNames="form-control"
+                       placeholder="Describe your problem in as much detail as possible"}}
+          </div>
+
+          {{#if question}}
+            <div class="form-group">
+              <p>Question preview:</p>
+              <p>{{question}}</p>
+            </div>
+          {{/if}}
+
+          <button class="btn btn-primary" type="submit">
+            Ask Question!
+          </button>
+        </form>
+      </div>
+
+      <div class="col-md-4">
+        <h2>Latest Questions</h2>
+
+        {{#each latestQuestions}}
+        <div class="panel panel-default">
+          <div class="panel-body">
+            {{#link-to 'question' this}}
+              {{title}}
+            {{/link-to}}
+
+            {{question}}
+            <br />
+            - {{author.fullName}}
+          </div>
+        </div>
+        {{/each}}
+    </div>
+  </script>
+
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember-1.4.0.js"></script>
+  <script src="http://builds.emberjs.com/beta/ember-data.js"></script>
+  <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+
+  <script src="js/app.js"></script>
+
+  <script src="js/models/question_model.js"></script>
+  <script src="js/models/user_model.js"></script>
+
+  <script src="js/fixtures/question_fixtures.js"></script>
+  <script src="js/fixtures/user_fixtures.js"></script>
+
+  <script src="js/routes/application_routes.js"></script>
+  <script src="js/routes/question_routes.js"></script>
+
+  <script src="js/controllers/application_controller.js"></script>
+  <script src="js/controllers/index_controller.js"></script>
+  <script src="js/controllers/sign_in_controller.js"></script>
+  <script src="js/controllers/question_controllers.js"></script>
+
+  <!-- to activate the test runner, add the "?test" query string parameter -->
+  <script src="tests/runner.js"></script>
+</body>
+</html>
